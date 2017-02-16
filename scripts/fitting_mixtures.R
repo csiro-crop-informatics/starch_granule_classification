@@ -46,13 +46,18 @@ ms_out <- ms_wide %>%
 #write output
 write_csv(ms_out, "data/fitted_mixtures.csv")
 
-ms_full <- ms_g %>% 
+#The fits can be explored with granular::ggfit_grp_tbl
+#The data is easier to handle if it is all in one tidy tbl
+#the distribution proportion and size data can be more 
+#easily handled as list columns
+ms_mix_full <- ms_g %>% 
   summarise_at(vars(size, prop), list) %>% 
   inner_join(ms_mix)
   
-
-ms_plots <- ms_full %>% 
+#The tbl needs to be grouped by sample
+ms_plots <- ms_mix_full %>% 
   group_by(msID, StrID) %>% 
-  ggfit_grp_tbl_(mix_out, prop, size)
+  ggfit_grp_tbl(mix_out, prop, size)
 
-ms_plots$ggfit_plot %>% print
+#Plots can be inspected
+ms_plots$ggfit_plot[ms_plots$msID == 3]
