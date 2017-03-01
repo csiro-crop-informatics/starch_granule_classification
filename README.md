@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/81780225.svg)](https://zenodo.org/badge/latestdoi/81780225)
+
 # Increased accuracy of starch granule type quantification using mixture distributions
 
 This repository accompanies the paper "Increased accuracy of starch granule type quantification using mixture distributions".
