@@ -53,7 +53,6 @@ length(unique(ms_ep$msID[ms_ep$extra_peak == 0])) #There are 835 samples. Down f
 #1 < B <= 10
 #10 < A
 ms_thresh <- ms_ep %>% 
-  filter(!extra_peak) %>% 
   summarise(threshold_A = sum(prop[size > 11.481536]) / 100,
             threshold_B = sum(prop[size > 0.954993 & size <= 11.481536]) / 100,
             threshold_C = sum(prop[size <= 0.954993]) / 100)
