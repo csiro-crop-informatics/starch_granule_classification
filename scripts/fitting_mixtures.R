@@ -83,9 +83,32 @@ ms_mix <- ms_ep %>%
   #filter(msID < 5) %>% 
   mix_grp_tbl(prop, size, peaks, pi, sigma, parallel = TRUE)
 
+#Extra peaks
+peaks_ep <- exp(setNames(c(-0.303, 1.843, 3.059,5), c("C", "B", "A", "extra")))
+pi_ep <- setNames(c(0.1, 0.3, 0.5, 0.1), c("C", "B", "A", "extra"))
+sigma_ep <- setNames(c(0.2, 0.6,0.4002, 0.3), c("C", "B", "A", "extra"))
+
+ms_mix_ep <- ms_ep %>% 
+  filter(extra_peak,
+         !msID %in% 191:192) %>% 
+  group_by(StrID, msID) %>% 
+  mix_grp_tbl(prop, size, peaks_ep, pi_ep, sigma_ep, parallel = TRUE)
+
+#191 and 192 have 5 peaks
+peaks_ep2 <- exp(setNames(c(-0.303, 1.843, 3.059, 5, 6), c("C", "B", "A", "extra", "extra2")))
+pi_ep2 <- setNames(c(0.1, 0.3, 0.5, 0.075, 0.025), c("C", "B", "A", "extra", "extra2"))
+sigma_ep2 <- setNames(c(0.2, 0.6,0.4002, 0.3, 0.3), c("C", "B", "A", "extra", "extra2"))
+
+ms_mix_ep2 <- ms_ep %>% 
+  filter(msID %in% 191:192) %>% 
+  group_by(StrID, msID) %>% 
+  mix_grp_tbl(prop, size, peaks_ep2, pi_ep2, sigma_ep2)
+
+ms_all <- bind_rows(ms_mix, ms_mix_ep, ms_mix_ep2)
+  
 #The returned tbl has a list column for output
 #Use unnest to expand it, then put into long form to reshape output stats
-ms_mix_g <- ms_mix %>%
+ms_mix_g <- ms_all %>%
   select(mix_out) %>% 
   unnest %>% 
   gather(stat_type, stat, -StrID, -msID, -peak) %>% 
@@ -110,6 +133,6 @@ ms_out <- ms_wide %>%
 #write_csv(ms_out, "data/granule_proportions.csv") 
 
 #write full parameters from mixture
-# ms_wide %>% 
-#   left_join(ms[,1:7]) %>% 
+# ms_wide %>%
+#   left_join(ms[,1:7]) %>%
 #   write_csv("data/fitted_mixtures.csv")
